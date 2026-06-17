@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard'
+import AddExpense from './pages/AddExpense'
+import Expenses from './pages/Expenses'
+import ExpenseDetail from './pages/ExpenseDetail'
 
 function App() {
 
@@ -11,7 +14,7 @@ function App() {
             <Sidebar />
         </div>
         <div className='flex-1 p-6'>
-            <Dashboard />
+            <ExpenseDetail />
         </div>
     </div>
      
