@@ -1,10 +1,41 @@
+import { useContext, useState } from "react"
 import { FaArrowLeft, FaCalendarAlt, FaReceipt, FaRupeeSign, FaSave, FaTags, FaTimes } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
+import { ExpenseContext } from "../context/ExpenseContext"
 
 function AddExpense() {
+
+    const navigate = useNavigate()
+    
+    const { expenses, setExpenses } = useContext(ExpenseContext)
+    const [expenseName, setExpenseName] = useState('')
+    const [amount, setAmount] = useState(0)
+    const [category, setCategory] = useState('')
+    const [date, setDate] = useState('')
+
+    const saveExpense = () => {
+        setExpenses([...expenses,
+            {
+                expenseName: expenseName,
+                amount: amount,
+                category: category,
+                date: date
+            }
+        ]            
+        )
+
+        navigate('/')
+    }
+
+
+
     return (
         <>
             <div className="flex flex-col gap-2">
-                <button className="flex items-center gap-2 text-blue-800 font-bold">
+                <button 
+                    className="flex items-center gap-2 text-blue-800 font-bold 
+                                cursor-pointer"
+                onClick={() => navigate('/')}>
                 <FaArrowLeft />
                     Back to Dashboard
                 </button>
@@ -18,6 +49,8 @@ function AddExpense() {
                         <FaReceipt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" /> 
                         <input
                                 type="text"
+                                value={expenseName}
+                                onChange={(e) => setExpenseName(e.target.value)}
                                 placeholder="Enter Expense Name"
                                 className="w-full pl-10 py-2 border border-gray-200 rounded-lg"
                             />
@@ -29,6 +62,8 @@ function AddExpense() {
                         <input
                             type="text"
                             placeholder="Enter Amount"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
                             className="w-full pl-10 py-2 border border-gray-200 rounded-lg"
                         />
                     </div>
@@ -41,6 +76,8 @@ function AddExpense() {
                                 <FaTags className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                 
                                 <select
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
                                     className="w-full pl-10 py-2 border border-gray-200 rounded-lg"
                                 >
                                     <option value="">Select Category</option>
@@ -58,6 +95,8 @@ function AddExpense() {
                                 <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                 <input
                                     type="date"
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
                                     className="w-full pl-10 py-2 border border-gray-200 rounded-lg"
                                 />
                             </div>
@@ -67,13 +106,16 @@ function AddExpense() {
                     <div className="flex gap-4 mb-4 ml-2">
                         <button 
                             className="flex items-center gap-2 
-                                bg-blue-800 text-white px-6 py-2 rounded-lg">
+                                bg-blue-800 text-white px-6 py-2 rounded-lg cursor-pointer"
+                                onClick={saveExpense}>
                                 <FaSave />
                                 Save Expense
                             </button>
                         <button 
                             className="flex items-center gap-2 text-blue-800 px-6 
-                                py-2 border border-gray-200 shadow-md rounded-lg">
+                                py-2 border border-gray-200 shadow-md rounded-lg 
+                                cursor-pointer"
+                                onClick={() => navigate('/')}>
                             <FaTimes />
                             Cancel
                         </button>

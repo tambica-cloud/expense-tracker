@@ -1,13 +1,20 @@
 import { FaCar, FaFilm, FaGasPump, FaPizzaSlice, FaPlusCircle, FaRupeeSign, FaShoppingBag, FaShoppingCart, FaUtensils  } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 
 function Dashboard() {
+
+    const navigate = useNavigate()
+
     return (
         <>
             <div>
                 <div className="flex justify-between gap-2">
                     <p className="font-bold text-2xl">Dashboard</p>
                     <button className="flex items-center bg-blue-500 
-                    text-white p-2 rounded-lg hover:bg-blue-600 transition cursor-pointer">
+                        text-white p-2 rounded-lg hover:bg-blue-600 transition 
+                        cursor-pointer"
+                        onClick={() => navigate('/add-expense')}
+                    >
                         <FaPlusCircle className="m-1" />
                         Add Expense
                     </button>
