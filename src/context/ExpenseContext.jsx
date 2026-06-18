@@ -4,8 +4,14 @@ export const ExpenseContext = createContext()
 
 function ExpenseProvider ({ children }) {
     const [expenses, setExpenses] = useState(() => {
-        const savedExpenses = localStorage.getItem('expenses')
-        return savedExpenses ? JSON.parse(savedExpenses) : []
+        try {
+            const savedExpenses = localStorage.getItem('expenses')
+            return savedExpenses ? JSON.parse(savedExpenses) : []
+        }
+        catch (error) {
+            return []
+        }
+        
     })
 
     useEffect(() => {
