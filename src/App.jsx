@@ -15,6 +15,7 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path='add-expense' element={<AddExpense />} />
+        <Route path='edit-expense/:id' element={<AddExpense />} />
         <Route path='expense-detail/:id' element={<ExpenseDetail />} />
         <Route path='expenses' element={<Expenses />} />
       </Route>

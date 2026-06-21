@@ -1,9 +1,34 @@
-import { FaCar, FaFilm, FaGasPump, FaPizzaSlice, FaPlusCircle, FaRupeeSign, FaShoppingBag, FaShoppingCart, FaUtensils  } from "react-icons/fa"
+import { useContext } from "react"
+import { FaCar, FaFilm, FaGasPump, FaPizzaSlice, FaBox,
+     FaPlusCircle, FaRupeeSign, FaShoppingBag, FaShoppingCart, FaUtensils  } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
+import { ExpenseContext } from "../context/ExpenseContext"
 
 function Dashboard() {
 
     const navigate = useNavigate()
+    const { expenses } = useContext(ExpenseContext)
+
+    const totalExpenses = expenses.reduce(
+        (sum, expense) => sum + Number(expense.amount), 0)
+
+    const foodExpense = expenses.filter(expense => expense.category === 'Food')
+                        .reduce((sum, expense) => sum + Number(expense.amount), 0)
+
+    const shoppingExpense = expenses.filter(expense => expense.category === 'Shopping')
+                        .reduce((sum, expense) => sum + Number(expense.amount), 0)
+
+    const transportExpense = expenses.filter(expense => expense.category === 'Transport')
+                        .reduce((sum, expense) => sum + Number(expense.amount), 0)
+
+
+    const categoryIcons = {
+            Food: <FaPizzaSlice className="text-orange-500" />,
+            Transport: <FaCar className="text-blue-500" />,
+            Shopping: <FaShoppingBag className="text-purple-500" />,
+            Entertainment: <FaFilm className="text-red-500" />,
+            Other: <FaBox className="text-gray-500" />
+        }
 
     return (
         <>
@@ -26,7 +51,7 @@ function Dashboard() {
                         <div className="flex items-center font-bold
                          text-blue-700 text-xl mt-2">
                             <FaRupeeSign />
-                            12,500
+                            {totalExpenses}
                         </div>
                         <label className="text-gray-500 text-xs font-bold
                          mt-2">This Month</label>
@@ -41,10 +66,10 @@ function Dashboard() {
                         <div className="flex items-center font-bold
                          text-xl mt-3 ">
                             <FaRupeeSign />
-                            4,000
+                            {foodExpense}
                         </div>
-                        <label className="text-gray-700 text-xs font-bold
-                         mt-2">32%</label>
+                        {/* <label className="text-gray-700 text-xs font-bold
+                         mt-2">32%</label> */}
                     </div>
                     <div className="flex flex-col border border-gray-300 p-6 w-56 rounded-lg 
                     shadow hover:shadow-2xl transition">
@@ -56,10 +81,10 @@ function Dashboard() {
                         <div className="flex items-center font-bold
                          text-xl mt-3">
                             <FaRupeeSign />
-                            3,500
+                            {transportExpense}
                         </div>
-                        <label className="text-gray-700 text-xs font-bold
-                         mt-2">28%</label>
+                        {/* <label className="text-gray-700 text-xs font-bold
+                         mt-2">28%</label> */}
                     </div>
                     <div className="flex flex-col border border-gray-300 p-6 w-56 rounded-lg 
                     shadow hover:shadow-2xl transition">
@@ -70,29 +95,34 @@ function Dashboard() {
                         <div className="flex items-center font-bold
                          text-xl mt-3">
                             <FaRupeeSign />
-                            5,000
+                            {shoppingExpense}
                         </div>
-                        <label className="text-gray-700 text-xs font-bold
-                         mt-2">40%</label>
+                        {/* <label className="text-gray-700 text-xs font-bold
+                         mt-2">40%</label> */}
                     </div>
                 </div>
                 <div className="flex justify-between mt-4 pt-4">
                     <p className="font-bold text-l">Recent Expenses</p>
-                    <button className="flex items-center
-                    text-blue-500 font-bold">
+                    <button
+                    onClick={() => navigate('/expenses')}
+                    className="flex items-center
+                    text-blue-500 font-bold cursor-pointer">
                         View All
                     </button>
                 </div>
-                <div className="grid grid-cols-4 items-center py-3">
-                    <div className="flex items-center gap-2">
-                         <FaPizzaSlice className="text-orange-500" />
-                         <p className="font-bold">Pizza</p>
-                    </div>                    
-                    <p className="text-green-500 font-bold">Food</p>
-                    <p className="text-gray-500 font-bold">14 Jun 2026</p>
-                    <p className="text-red-500 font-bold">₹500</p>
-                </div>
-                <div className="grid grid-cols-4 items-center py-3">
+                {expenses.map((expense, index) => 
+
+                    <div key={index} className="grid grid-cols-4 items-center py-3">
+                        <div className="flex items-center gap-2">
+                            {categoryIcons[expense.category]}
+                            <p className="font-bold">{expense.expenseName}</p>
+                        </div>                    
+                        <p className="text-green-500 font-bold">{expense.category}</p>
+                        <p className="text-gray-500 font-bold">{expense.date}</p>
+                        <p className="text-red-500 font-bold">{expense.amount}</p>
+                    </div>
+                )}
+                {/* <div className="grid grid-cols-4 items-center py-3">
                     <div className="flex items-center gap-2">
                         <FaGasPump className="text-blue-500" />
                         <p className="font-bold">Petrol</p>
@@ -127,7 +157,7 @@ function Dashboard() {
                     <p className="text-green-500 font-bold">Food</p>
                     <p className="text-gray-500 font-bold">11 Jun 2026</p>
                     <p className="text-red-500 font-bold">₹1,200</p>
-                </div>
+                </div> */}
 
 
             </div>

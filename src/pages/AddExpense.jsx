@@ -1,6 +1,6 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { FaArrowLeft, FaCalendarAlt, FaReceipt, FaRupeeSign, FaSave, FaTags, FaTimes } from "react-icons/fa"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { ExpenseContext } from "../context/ExpenseContext"
 
 function AddExpense() {
@@ -12,17 +12,46 @@ function AddExpense() {
     const [amount, setAmount] = useState(0)
     const [category, setCategory] = useState('')
     const [date, setDate] = useState('')
+    const { id } = useParams()
+
+    const editingExpense = expenses.find((
+        expense) => expense.id === Number(id))
+
+    useEffect(() => {
+        if(editingExpense) {
+            setExpenseName(editingExpense.expenseName)
+            setAmount(editingExpense.amount)
+            setDate(editingExpense.date)
+            setCategory(editingExpense.category)
+        }
+    }, [editingExpense])
 
     const saveExpense = () => {
-        setExpenses([...expenses,
-            {
-                expenseName: expenseName,
-                amount: amount,
-                category: category,
-                date: date
-            }
-        ]            
-        )
+        if(id) {
+            setExpenses(
+                expenses.map((expense) => 
+                    expense.id === Number(id) ? {
+                        ...expense,
+                        expenseName,
+                        category,
+                        date,
+                        amount
+                    } : expense
+                )
+            )
+        } else {
+            setExpenses([...expenses,
+                {
+                    id: Date.now(),
+                    expenseName: expenseName,
+                    amount: amount,
+                    category: category,
+                    date: date
+                }]            
+            )
+        }
+
+        
 
         navigate('/')
     }
@@ -115,7 +144,7 @@ function AddExpense() {
                             className="flex items-center gap-2 text-blue-800 px-6 
                                 py-2 border border-gray-200 shadow-md rounded-lg 
                                 cursor-pointer"
-                                onClick={() => navigate('/')}>
+                                onClick={() => id ? navigate(`/expense-detail/${id}`) : navigate('/')}>
                             <FaTimes />
                             Cancel
                         </button>
