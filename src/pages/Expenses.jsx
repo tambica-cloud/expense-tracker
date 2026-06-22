@@ -1,25 +1,29 @@
 import { useContext, useState } from "react";
-import { FaPlusCircle, FaPizzaSlice, FaGasPump, FaFilm, FaBox, FaCar,
-    FaShoppingBag, FaShoppingCart, FaEye, FaTrash  } from "react-icons/fa"
+import { FaPlusCircle} from "react-icons/fa"
 import { ExpenseContext } from "../context/ExpenseContext";
 import { useNavigate } from "react-router-dom";
+import ExpenseItem from '../components/ExpenseItem'
 
 function Expenses() {
     const { expenses, setExpenses } = useContext(ExpenseContext)
     const [selectedCategory, setSelectedCategory] = useState('All')
 
-    const categoryIcons = {
-        Food: <FaPizzaSlice className="text-orange-500" />,
-        Transport: <FaCar className="text-blue-500" />,
-        Shopping: <FaShoppingBag className="text-purple-500" />,
-        Entertainment: <FaFilm className="text-red-500" />,
-        Other: <FaBox className="text-gray-500" />
-    }
+    const [searchTerm, setSearchTerm] = useState('')
     
     const filteredExpenses = 
-        selectedCategory === 'All' 
-        ? expenses
-        : expenses.filter(expense => expense.category === selectedCategory)
+        expenses.filter(expense => {
+            const matchesCategory = 
+            selectedCategory === 'All' ||
+            expense.category === selectedCategory;
+            
+            const matchesSearches = 
+                expense.expenseName
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
+
+        return matchesCategory && matchesSearches
+            
+        })
 
     const navigate = useNavigate()
 
@@ -52,6 +56,8 @@ function Expenses() {
                         placeholder="🔍 Search Expenses"
                         className="flex-1 px-4 py-2 border border-gray-200 
                         rounded-lg"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
                     <select
@@ -80,28 +86,13 @@ function Expenses() {
                 </div> 
 
                 {
-                    filteredExpenses.map((expense, index) => 
-                    <div key={expense.id} className="grid grid-cols-5 items-center py-3">
-                        <div className="flex items-center gap-2">
-                                {categoryIcons[expense.category]}
-                                <p className="font-bold">{expense.expenseName}</p>
-                        </div>                    
-                        <p className="text-green-500 font-bold">{expense.category}</p>
-                        <p className="text-gray-500 font-bold">{expense.date}</p>
-                        <p className="text-red-500 font-bold">₹{expense.amount}</p>
-                        <div className="flex gap-4 items-center justify-start">
-                            <button onClick={() => navigate(`/expense-detail/${expense.id}`)}>
-                                <FaEye 
-                                    className="text-blue-500 hover:text-blue-700 
-                                    cursor-pointer" />
-                            </button>
-                            <button onClick={() => deleteExpense(expense.id)}>
-                                <FaTrash 
-                                    className="text-red-500 hover:text-red-700 
-                                    cursor-pointer" />
-                            </button>
-                        </div>
-                    </div>
+                    filteredExpenses.map((expense) => 
+                    <ExpenseItem
+                        key={expense.id}
+                        expense = {expense}
+                        deleteExpense = {deleteExpense}
+                        showActions = {true}
+                    />
                 )
                 }
 

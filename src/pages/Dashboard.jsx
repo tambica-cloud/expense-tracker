@@ -1,8 +1,11 @@
 import { useContext } from "react"
 import { FaCar, FaFilm, FaGasPump, FaPizzaSlice, FaBox,
-     FaPlusCircle, FaRupeeSign, FaShoppingBag, FaShoppingCart, FaUtensils  } from "react-icons/fa"
+     FaPlusCircle, FaRupeeSign, FaShoppingBag, FaShoppingCart, FaUtensils  } 
+     from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
 import { ExpenseContext } from "../context/ExpenseContext"
+import ExpenseSummaryCard from "../components/ExpenseSummaryCard"
+import ExpenseItem from '../components/ExpenseItem'
 
 function Dashboard() {
 
@@ -44,6 +47,7 @@ function Dashboard() {
                         Add Expense
                     </button>
                 </div>
+                
                 <div className="flex gap-6 mt-6">
                     <div className="flex flex-col border border-gray-300 p-6 w-72 rounded-lg 
                     shadow-md hover:shadow-lg transition">
@@ -56,51 +60,29 @@ function Dashboard() {
                         <label className="text-gray-500 text-xs font-bold
                          mt-2">This Month</label>
                     </div>
-                    <div className="flex flex-col border border-gray-300 p-6 w-56 rounded-lg 
-                    shadow hover:shadow-2xl transition">
-                        <div className="flex items-center gap-2">
-                            <FaUtensils className="text-orange-500 text-2xl" />
-                            <p className="font-bold text-xs text-gray-700">Food</p>
-                        </div>
-                        
-                        <div className="flex items-center font-bold
-                         text-xl mt-3 ">
-                            <FaRupeeSign />
-                            {foodExpense}
-                        </div>
+                    <ExpenseSummaryCard 
+                        title = "Food"
+                        icon = {<FaUtensils className="text-orange-500 text-2xl" />}
+                        amount = {foodExpense}
+                    />
+             
                         {/* <label className="text-gray-700 text-xs font-bold
                          mt-2">32%</label> */}
-                    </div>
-                    <div className="flex flex-col border border-gray-300 p-6 w-56 rounded-lg 
-                    shadow hover:shadow-2xl transition">
-                        <div className="flex items-center gap-2">
-                            <FaCar className="text-blue-500 text-2xl"/>
-                            <p className="font-bold text-xs text-gray-700">Transport</p>
-                        </div>
-                        
-                        <div className="flex items-center font-bold
-                         text-xl mt-3">
-                            <FaRupeeSign />
-                            {transportExpense}
-                        </div>
-                        {/* <label className="text-gray-700 text-xs font-bold
-                         mt-2">28%</label> */}
-                    </div>
-                    <div className="flex flex-col border border-gray-300 p-6 w-56 rounded-lg 
-                    shadow hover:shadow-2xl transition">
-                        <div className="flex items-center gap-2">
-                            <FaShoppingBag className="text-green-500 text-2xl"/>
-                        <p className="font-bold text-xs text-gray-700">Shopping</p>
-                        </div>
-                        <div className="flex items-center font-bold
-                         text-xl mt-3">
-                            <FaRupeeSign />
-                            {shoppingExpense}
-                        </div>
-                        {/* <label className="text-gray-700 text-xs font-bold
-                         mt-2">40%</label> */}
+                
+                    <ExpenseSummaryCard 
+                            title = "Transport"
+                            icon = {<FaCar className="text-blue-500 text-2xl" />}
+                            amount = {transportExpense}
+                    />
+                    
+                    <ExpenseSummaryCard 
+                            title = "Shopping"
+                            icon = {<FaShoppingBag className="text-blue-500 text-2xl" />}
+                            amount = {shoppingExpense}
+                    />
                     </div>
                 </div>
+                
                 <div className="flex justify-between mt-4 pt-4">
                     <p className="font-bold text-l">Recent Expenses</p>
                     <button
@@ -112,15 +94,10 @@ function Dashboard() {
                 </div>
                 {expenses.map((expense, index) => 
 
-                    <div key={index} className="grid grid-cols-4 items-center py-3">
-                        <div className="flex items-center gap-2">
-                            {categoryIcons[expense.category]}
-                            <p className="font-bold">{expense.expenseName}</p>
-                        </div>                    
-                        <p className="text-green-500 font-bold">{expense.category}</p>
-                        <p className="text-gray-500 font-bold">{expense.date}</p>
-                        <p className="text-red-500 font-bold">{expense.amount}</p>
-                    </div>
+                    <ExpenseItem
+                        key = {expense.id}
+                        expense = {expense}
+                    />
                 )}
                 {/* <div className="grid grid-cols-4 items-center py-3">
                     <div className="flex items-center gap-2">
@@ -160,7 +137,7 @@ function Dashboard() {
                 </div> */}
 
 
-            </div>
+            {/* </div> */}
         </>
     )
 }
